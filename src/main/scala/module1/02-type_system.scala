@@ -13,12 +13,11 @@ object type_system {
 
    // Unit
 
+
    // Null
 
+
    // Nothing
-
-
-
 
 
 
@@ -34,13 +33,38 @@ object type_system {
    *
    */
 
+   class Foo(x: Int, y: Int){
+     def a: Int = ???
+     val b: Int = ???
+
+     def this(x: Int) = {
+       this(x, 0)
+     }
+  }
+
+
+
+
+   val foo = new Foo(1)
+
+
+
 
   /**
    * Задание 1: Создать класс "Прямоугольник"(Rectangle), мы должны иметь возможность создавать прямоугольник с заданной
    * длиной(length) и шириной(width), а также вычислять его периметр и площадь
    */
 
+  class Rectangle private (w: Int, l: Int) {
+    def area:Int = w * l
+    def perimeter: Int = 2 * (w + l)
+  }
 
+  object Rectangle{
+    def apply(w: Int, l: Int): Rectangle = new Rectangle(w, l)
+  }
+
+  val r: Rectangle = Rectangle(1, 4)
 
   /**
    * object
@@ -48,6 +72,10 @@ object type_system {
    * 1. Паттерн одиночка
    * 2. Линивая инициализация
    */
+
+   object F{
+    println("hello ")
+  }
 
 
   /**
@@ -62,7 +90,11 @@ object type_system {
    *
    */
 
+   case class CreditCard(number: String, cvc: Int)
 
+   CreditCard("", 12).copy(number = "123")
+
+  case object J
   /**
    * case object
    *
@@ -92,6 +124,37 @@ object type_system {
    */
 
 
+
+  class A {
+    def foo() = "A"
+  }
+
+  trait B extends A {
+    override def foo() = "B" + super.foo()
+  }
+
+  trait C extends B {
+    override def foo() = "C" + super.foo()
+  }
+
+  trait D extends A {
+    override def foo() = "D" + super.foo()
+  }
+
+  trait E extends C {
+    override def foo(): String = "E" + super.foo()
+  }
+
+  val v = new A with D with C with B
+
+  // A -> D -> B -> C
+
+  val v1 = new A with E with D with C with B
+
+  // A -> B -> C -> E -> D
+
+
+
   /**
    * Value classes и Universal traits
    * Value classes - это механизм, который позволяет избегать аллокации дополнительных объектов во время исполнения
@@ -102,6 +165,19 @@ object type_system {
    *
    * Universal trait - это trait который явно наследует Any, может иметь только def методы и не имеет инициализации
    */
+
+   trait Printable extends Any{
+    def print(): Unit = println(this)
+  }
+   class Id(val raw: String) extends AnyVal with Printable
+
+   implicit class strExt(val str: String) extends AnyVal {
+      def trimToOption: Option[String] = ???
+   }
+
+   "hello".trimToOption
+
+
 
 
 
